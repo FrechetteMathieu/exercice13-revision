@@ -1,15 +1,16 @@
-import os
 import getopt
 import sys
-import hashlib
-
+# Importez la librairie bcrypt pour la gestion du mot de passe
+# https://pypi.org/project/bcrypt/
+import bcrypt
 
 
 def creer_usager(nom_usager, mot_de_passe):
     # Création d'un salt unique pour le nouveau usager
-    salt = os.urandom(32)
+    salt = bcrypt.gensalt()
+    
     # Hashage du mot de passe
-    mot_de_passe_hash = hashlib.pbkdf2_hmac('sha256',mot_de_passe.encode('utf-8'),salt, 100000, dklen=128)
+    mot_de_passe_hash = bcrypt.hashpw(mot_de_passe.encode('utf8'), salt)
 
     # Insertion des informations dans la table usager de la base de données
     # colonne : valeur
@@ -19,7 +20,8 @@ def creer_usager(nom_usager, mot_de_passe):
 
 
     # Afficher message de confirmation
-
+    print(salt)
+    print(mot_de_passe_hash)
 
 
 def valider_nom_usager(nom_usager):
